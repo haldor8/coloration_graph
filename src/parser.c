@@ -122,7 +122,7 @@ int main() {
 
     // Test 2 : Lecture depuis un fichier
     printf("\n=== Test 2: Lecture depuis un fichier ===\n");
-    Graph *graphFromFile = readGraphFromFile("graph/graphTest.col", 0);
+    Graph *graphFromFile = readGraphFromFile("graphTest.col", 0);
     if (graphFromFile) {
         printf("Graph from file with %d nodes\n", graphFromFile->numNodes);
         for (int i = 0; i < graphFromFile->numNodes; i++) {
