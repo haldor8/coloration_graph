@@ -9,8 +9,8 @@ typedef struct Node {
 } Node;
 
 typedef struct Arcs {
-        int vertices1;
-        int vertices2;
+        int vertex1;
+        int vertex2;
         int weight;
 } Arcs;
 
@@ -24,7 +24,7 @@ typedef struct Graph {
 } Graph;
 
 void freeNode(Node *node) {
-    if (node->otherNode) { // Libère le tableau des voisins, s'il existe
+    if (node->otherNode) {
         free(node->otherNode);
         node->otherNode = NULL;
     }
@@ -32,26 +32,23 @@ void freeNode(Node *node) {
 
 void freeGraph(Graph *graph) {
     if (!graph)
-        return; // Ne rien faire si le graphe est NULL
-
-    // Libérer les ressources de chaque nœud
+        return;
     for (int i = 0; i < graph->numNodes; i++) {
         freeNode(&graph->nodes[i]);
         printf("Node[%d] memory freed\n", i);
     }
 
-    // Libérer le tableau des nœuds
     free(graph->nodes);
 
-    // Libérer le tableau des arcs, s'il existe
     if (graph->arcs) {
         free(graph->arcs);
     }
 
-    // Libérer la structure Graph elle-même
     free(graph);
 }
-
+Graph *readGraphFromFile(const char *filename, int directed) {
+    FILE *file = fopen(filename, "r");
+}
 Graph *createGraph(int numNodes, int directed) {
     Graph *graph = (Graph *)malloc(sizeof(Graph));
     if (!graph) {
@@ -70,6 +67,10 @@ Graph *createGraph(int numNodes, int directed) {
     graph->directed = directed;
     graph->arcs = NULL;
     return graph;
+}
+
+void addArc(Graph *graph, int vertex1, int vertex2) {
+    // TODO
 }
 
 int main() {
