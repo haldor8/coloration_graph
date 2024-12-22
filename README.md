@@ -1,2 +1,2 @@
 # coloration_graph
-g
+
