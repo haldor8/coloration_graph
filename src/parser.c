@@ -46,9 +46,39 @@ void freeGraph(Graph *graph) {
 
     free(graph);
 }
-Graph *readGraphFromFile(const char *filename, int directed) {
-    FILE *file = fopen(filename, "r");
+
+void addArc(Graph *graph, int vertex1, int vertex2) {
+
+    // TODO
 }
+Graph *readGraphFromFile(const char *filename, int directed) {
+    int numNodes, numEdges;
+
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        printf("Failed to open file \n");
+        exit(EXIT_FAILURE);
+    }
+    Graph *graph = NULL;
+    char buffer[256];
+    while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        if (buffer[0] == 'c') {
+            continue;
+        }
+        if (buffer[0] == 'p') {
+            sscanf(buffer, "p edge %d %d", &numNodes, &numEdges);
+            graph = createGraph(numNodes, directed);
+        }
+        if (buffer[0] == 'e') {
+            int vertex1, vertex2;
+            sscanf(buffer, "e %d %d", &vertex1, &vertex2);
+            addArc(graph, vertex1, vertex2);
+        }
+    }
+    fclose(file);
+    return graph;
+}
+
 Graph *createGraph(int numNodes, int directed) {
     Graph *graph = (Graph *)malloc(sizeof(Graph));
     if (!graph) {
@@ -67,10 +97,6 @@ Graph *createGraph(int numNodes, int directed) {
     graph->directed = directed;
     graph->arcs = NULL;
     return graph;
-}
-
-void addArc(Graph *graph, int vertex1, int vertex2) {
-    // TODO
 }
 
 int main() {
