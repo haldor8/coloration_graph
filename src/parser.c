@@ -58,13 +58,16 @@ void addArc(Graph *graph, int vertex1, int vertex2) {
 
     // TODO
     printf("Arc to add: %d -> %d\n", vertex1, vertex2);
+    /*
     if (!graph->arcs) {
         graph->numArcs = 0;
-        graph->arcs = (Arcs *)malloc(sizeof(Arcs))
+        graph->arcs = (Arcs *)malloc(sizeof(Arcs));
     } else {
         graph->numArcs += 1;
-        graph->arcs = (Arcs *)realloc(graph->numArcs * sizeof(Arcs *))
+        graph->arcs =
+            (Arcs *)realloc(graph->arcs, graph->numArcs * sizeof(Arcs));
     }
+    */
 }
 Graph *readGraphFromFile(const char *filename, int directed) {
     int numNodes, numEdges;
