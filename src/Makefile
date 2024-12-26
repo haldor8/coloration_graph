@@ -16,7 +16,7 @@ endif
 
 # Règle pour créer l'exécutable
 $(EXEC): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ -lpthread
+	$(CC) $(CFLAGS) -o $@ $^
 
 # Règle pour compiler les fichiers objets
 %.o: %.c
@@ -24,7 +24,8 @@ $(EXEC): $(OBJS)
 
 # Règle pour nettoyer les fichiers générés
 clean:
-	$(RM) $(OBJS) $(EXEC)
+	$(RM) *.o
+	$(RM) *.exe
 
 # Règle pour nettoyer manuellement
 man_clean_w:

@@ -1,15 +1,48 @@
 #ifndef H_GRAPH
 #define H_GRAPH
 
-typedef struct
-{
-    // Données
-    noeud *noeuds_suivant;
-} noeud;
+enum couleur{
+    VIDE,
+    BLANC,
+    GRIS,
+    NOIR,
+    BLEU,
+    ROUGE,
+    VERT,
+    JAUNE,
+    ROSE,
+    VIOLET,
+    MARRON,
+    ORANGE
+};
 
-void initialiser_graphe();
-void charger_graphe(char *nom_fichier);
-void creer_noeud();
-void liberer_graphe();
+typedef struct {
+        int id;
+        struct Node **otherNode;
+        int nbNeighbor;
+        enum couleur color;
+}Node;
+
+typedef struct {
+        int vertex1;
+        int vertex2;
+        int weight;
+}Arc;
+
+typedef struct {
+        Node *nodes;
+        Arc *arcs;
+        int numNodes;
+        int numArcs;
+        int directed; // 1 si oui 0 si non
+
+}Graph;
+
+void freeNode(Node *node);
+void freeGraph(Graph *graph);
+void addArc(Graph *graph, int vertex1, int vertex2);
+
+Graph *readGraphFromFile(const char *filename, int directed);
+Graph *createGraph(int numNodes, int directed);
 
 #endif
