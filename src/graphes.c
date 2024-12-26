@@ -28,20 +28,31 @@ void freeGraph(Graph *graph) {
 }
 
 void addArc(Graph *graph, int vertex1, int vertex2) {
-
-    // TODO
     printf("Arc to add: %d -> %d\n", vertex1, vertex2);
-    /*
-    if (!graph->arcs) {
-        graph->numArcs = 0;
-        graph->arcs = (Arcs *)malloc(sizeof(Arcs));
-    } else {
-        graph->numArcs += 1;
-        graph->arcs =
-            (Arcs *)realloc(graph->arcs, graph->numArcs * sizeof(Arcs));
+    if(graph->numArcs == 0){
+        graph->arcs = (Arc*)malloc(sizeof(Arc));
+        graph->arcs[graph->numArcs].vertex1 = vertex1;
+        graph->arcs[graph->numArcs].vertex2 = vertex2;
+        graph->arcs[graph->numArcs].weight = 1;
+        graph->numArcs++;
+    }else{
+        Arc* reallocatedArray = realloc(graph->arcs, graph->numArcs * sizeof(Arc));
+        if(reallocatedArray){
+            reallocatedArray[graph->numArcs].vertex1 = vertex1;
+            reallocatedArray[graph->numArcs].vertex2 = vertex2;
+
+            reallocatedArray[graph->numArcs].weight = 1;
+
+            graph->arcs = reallocatedArray;
+            graph->numArcs++;
+        }else{
+            fprintf(stderr, "Erreur lors de la reallocation, sortie du programme");
+            exit(-1);
+        }
+        displayArcs(reallocatedArray, graph->numArcs);
     }
-    */
 }
+
 Graph *readGraphFromFile(const char *filename, int directed) {
     int numNodes, numEdges;
 
@@ -85,7 +96,14 @@ Graph *createGraph(int numNodes, int directed) {
         graph->nodes[i].color = 0;
     }
     graph->numNodes = numNodes;
+    graph->numArcs = 0;
     graph->directed = directed;
     graph->arcs = NULL;
     return graph;
+}
+
+void displayArcs(Arc* arcList, int length){
+    for(int i = 0; i < length; i++){
+        printf("Vertex1 : %d, vertex2 : %d, weight : %d\n", arcList[i].vertex1, arcList[i].vertex2, arcList[i].weight);
+    }
 }

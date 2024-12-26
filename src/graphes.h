@@ -45,4 +45,6 @@ void addArc(Graph *graph, int vertex1, int vertex2);
 Graph *readGraphFromFile(const char *filename, int directed);
 Graph *createGraph(int numNodes, int directed);
 
+void displayArcs(Arc* arcList, int length);
+
 #endif
