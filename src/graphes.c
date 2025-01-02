@@ -3,13 +3,6 @@
 #include <stdlib.h>
 #include "graphes.h"
 
-void freeNode(Node *node) {
-    if (node->otherNodes) {
-        free(node->otherNodes);
-        node->otherNodes = NULL;
-    }
-}
-
 int* initializeColorArray(){
     int* initializedArray = (int*)malloc(ENUM_SIZE * sizeof(int)); // On alloue un tableau contenant toutes les couleurs possibles
     for(int i = 0; i < ENUM_SIZE; i++){
@@ -28,35 +21,46 @@ void freeColorArray(int* array){
     free(array);
 }
 
+
+void freeNode(Node *node) {
+    freeColorArray(node->colorArray);
+    if (node->otherNodes) {
+        freeVertices(node->otherNodes, node->nbNeighbor);
+        node->otherNodes = NULL;
+    }
+    free(node);
+}
+
+void freeVertices(struct Vertex** verticies, int arraySize){
+    for(int i = 0; i < arraySize; i++){
+        free(verticies[i]);
+    }
+    free(verticies);
+}
+
 void freeGraph(Graph *graph) {
     if (!graph)
         return;
 
     for (int i = 0; i < graph->numNodes; i++) {
-        freeColorArray(graph->nodes[i]->colorArray);
         freeNode(graph->nodes[i]);
         printf("Node[%d] memory freed\n", i);
     }
 
     free(graph->nodes);
-
-    if (graph->arcs) {
-        free(graph->arcs);
-    }
-
     free(graph);
 }
 
+/*
 void addArc(Graph *graph, int vertex1, int vertex2) {
     printf("Arc to add: %d -> %d\n", vertex1, vertex2);
     if(graph->numArcs == 0){
-        graph->arcs = (Arc*)malloc(sizeof(Arc));
-        graph->arcs[graph->numArcs].vertex1 = vertex1;
-        graph->arcs[graph->numArcs].vertex2 = vertex2;
-        graph->arcs[graph->numArcs].weight = 1;
+        graph->vertices = (Vertex*)malloc(sizeof(Vertex));
+        graph->vertices[graph->numArcs].otherNode = vertex2;
+        graph->vertices[graph->numArcs].weight = 1;
         graph->numArcs++; // On incrémente après car les index sont décalés de -1
     }else{
-        Arc* reallocatedArray = realloc(graph->arcs, (graph->numArcs + 1) * sizeof(Arc));
+        Arc* reallocatedArray = realloc(graph->vertices, (graph->numArcs + 1) * sizeof(Arc));
         if(reallocatedArray){
             reallocatedArray[graph->numArcs].vertex1 = vertex1;
             reallocatedArray[graph->numArcs].vertex2 = vertex2;
@@ -73,7 +77,7 @@ void addArc(Graph *graph, int vertex1, int vertex2) {
     }
     addNeighbor(graph->nodes, graph->numNodes, vertex1, vertex2);
 }
-
+*/
 Node* findNode(Node** array, int arraySize, int soughtNode){
     for(int i = 0; i < arraySize; i++){
         if(array[i]->id == soughtNode){
@@ -85,19 +89,26 @@ Node* findNode(Node** array, int arraySize, int soughtNode){
     return NULL;
 }
 
+Vertex* addVertex(Node* finalNode, int weight){
+    Vertex* newVertex = malloc(sizeof(Vertex));
+    newVertex->otherNode = finalNode;
+    newVertex->weight = weight;
+    return newVertex;
+}
+
 void addNeighbor(Node** array, int arraySize, int sourceNodeId, int finalNodeId){
     Node* sourceNode = findNode(array, arraySize, sourceNodeId);
     Node* finalNode = findNode(array, arraySize, finalNodeId);
 
+    Vertex** newArray;
     if(sourceNode->nbNeighbor == 0){
-        sourceNode->otherNodes = (struct Node**)malloc(sizeof(Node*));
-        sourceNode->otherNodes[sourceNode->nbNeighbor] = (struct Node*)finalNode;
-        sourceNode->nbNeighbor += 1;
+        newArray = (Vertex**)malloc(sizeof(Vertex*));
     }else{
-        sourceNode->otherNodes = (struct Node**)realloc(sourceNode->otherNodes, (sourceNode->nbNeighbor+1) * sizeof(Node*));
-        sourceNode->otherNodes[sourceNode->nbNeighbor] = (struct Node*)finalNode;
-        sourceNode->nbNeighbor += 1;
+        newArray = (Vertex**)realloc(sourceNode->otherNodes, (sourceNode->nbNeighbor+1) * sizeof(Vertex*));
     }
+    sourceNode->otherNodes = (struct Vertex**)newArray;
+    sourceNode->otherNodes[sourceNode->nbNeighbor] = (struct Vertex*)addVertex(finalNode, 1);
+    sourceNode->nbNeighbor += 1;
 }
 
 Graph *readGraphFromFile(const char *filename, int directed) {
@@ -122,7 +133,7 @@ Graph *readGraphFromFile(const char *filename, int directed) {
             if(graph != NULL){
                 int vertex1, vertex2;
                 sscanf(buffer, "e %d %d", &vertex1, &vertex2);
-                addArc(graph, vertex1, vertex2);
+                addNeighbor(graph->nodes, graph->numNodes, vertex1, vertex2);
             }else{
                 fprintf(stderr, "Graphe non instancie\n");
                 exit(-1);
@@ -158,17 +169,19 @@ Graph *createGraph(int numNodes, int directed) {
     graph->numNodes = numNodes;
     graph->numArcs = 0;
     graph->directed = directed;
-    graph->arcs = NULL;
+    graph->vertices = NULL;
     return graph;
 }
 
-void displayArcs(Arc* arcList, int length){
+/*
+void displayArcs(Vertex* arcList, int length){
     for(int i = 0; i < length; i++){
         printf("Vertex1 : %d, vertex2 : %d, weight : %d\n", arcList[i].vertex1, arcList[i].vertex2, arcList[i].weight);
     }
 }
+*/
 
-void displayNeighbors(int nodeId, Node** nodeArray, int arraySize){
+void displayNeighbors(int nodeId, Vertex** verticiesArray, int arraySize){
     if(arraySize == 0){
         printf("Noeud numero %d : aucun voisin", nodeId);
         printf("\n");
@@ -176,7 +189,7 @@ void displayNeighbors(int nodeId, Node** nodeArray, int arraySize){
     else{
         printf("Noeud numero %d qui pointe vers les noeuds : ", nodeId);
         for(int i = 0; i < arraySize; i++){
-            printf("%d, ", nodeArray[i]->id);
+            printf("%d (%d), ", verticiesArray[i]->otherNode->id, verticiesArray[i]->weight);
         }
         printf("\n");
     }
@@ -185,6 +198,6 @@ void displayNeighbors(int nodeId, Node** nodeArray, int arraySize){
 void graphToString(Graph* graph){
     printf("Graphe avec %d noeuds.\n", graph->numNodes);
     for(int i = 0; i < graph->numNodes; i++){
-        displayNeighbors(graph->nodes[i]->id, (Node**)graph->nodes[i]->otherNodes, graph->nodes[i]->nbNeighbor);
+        displayNeighbors(graph->nodes[i]->id, (Vertex **)graph->nodes[i]->otherNodes, graph->nodes[i]->nbNeighbor);
     }
 }

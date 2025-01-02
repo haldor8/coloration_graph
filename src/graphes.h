@@ -18,22 +18,23 @@ enum colors{
 
 #define ENUM_SIZE 12 // Taille = "index" du dernier élément +1
 
+struct Vertex;
+
 typedef struct {
         int id;
-        struct Node **otherNodes;
+        struct Vertex **otherNodes;
         int nbNeighbor;
         int* colorArray;
 }Node;
 
 typedef struct {
-        int vertex1;
-        int vertex2;
+        Node* otherNode;
         int weight;
-}Arc;
+}Vertex;
 
 typedef struct {
         Node **nodes;
-        Arc *arcs;
+        Vertex *vertices;
         int numNodes;
         int numArcs;
         int directed; // 1 si oui 0 si non
@@ -41,17 +42,20 @@ typedef struct {
 
 void freeNode(Node *node);
 void freeGraph(Graph *graph);
-void addArc(Graph *graph, int vertex1, int vertex2);
+void freeVertices(struct Vertex** verticies, int arraySize);
+
+
+Vertex* addVertex(Node* finalNode, int weight);
 
 int* initializeColorArray();
 
 Graph *readGraphFromFile(const char *filename, int directed);
 Graph *createGraph(int numNodes, int directed);
 
-void displayArcs(Arc* arcList, int length);
+void displayArcs(Vertex* arcList, int length);
 void addNeighbor(Node** array, int arraySize, int sourceNodeId, int finalNodeId);
 Node* findNode(Node** array, int arraySize, int soughtNode);
 
-void displayNeighbors(int nodeId, Node** nodeArray, int arraySize);
+void displayNeighbors(int nodeId, Vertex** nodeArray, int arraySize);
 void graphToString(Graph* graph);
 #endif
