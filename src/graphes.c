@@ -11,11 +11,24 @@ int* initializeColorArray(){
     return initializedArray;
 }
 
-/*
-void removeColorFromArray(enum colors* array, int index){
-
+int* reinitializeColorArray(int* array){
+    free(array);
+    return initializeColorArray();
 }
-*/
+
+void removeColorFromArray(int* array, int arraySize, int color){
+    int* newArray = (int*)malloc((arraySize-1) * sizeof(int));
+    int cnt = 0;
+    for(int i = 0; i < arraySize; i++){
+        if(array[i] != color){
+            newArray[i] = array[i];
+            cnt++;
+        }
+    }
+    freeColorArray(array);
+    array = newArray;
+}
+
 
 void freeColorArray(int* array){
     free(array);
@@ -96,7 +109,7 @@ Vertex* addVertex(Node* finalNode, int weight){
     return newVertex;
 }
 
-void addNeighbor(Node** array, int arraySize, int sourceNodeId, int finalNodeId){
+void addNeighbor(Node** array, int arraySize, int sourceNodeId, int finalNodeId, int isDirected){
     Node* sourceNode = findNode(array, arraySize, sourceNodeId);
     Node* finalNode = findNode(array, arraySize, finalNodeId);
 
@@ -106,9 +119,23 @@ void addNeighbor(Node** array, int arraySize, int sourceNodeId, int finalNodeId)
     }else{
         newArray = (Vertex**)realloc(sourceNode->otherNodes, (sourceNode->nbNeighbor+1) * sizeof(Vertex*));
     }
+
     sourceNode->otherNodes = (struct Vertex**)newArray;
     sourceNode->otherNodes[sourceNode->nbNeighbor] = (struct Vertex*)addVertex(finalNode, 1);
     sourceNode->nbNeighbor += 1;
+
+    if(!isDirected){ // Si le graphe est non-orienté, alors on ajoute aussi l'arc dans l'autre sens
+        Vertex** secondArray;
+        if(finalNode->nbNeighbor == 0){
+            secondArray = (Vertex**)malloc(sizeof(Vertex*));
+        }else{
+            secondArray = (Vertex**)realloc(finalNode->otherNodes, (finalNode->nbNeighbor+1) * sizeof(Vertex*));
+        }
+
+        finalNode->otherNodes = (struct Vertex**)secondArray;
+        finalNode->otherNodes[finalNode->nbNeighbor] = (struct Vertex*)addVertex(sourceNode, 1);
+        finalNode->nbNeighbor += 1;
+    }
 }
 
 Graph *readGraphFromFile(const char *filename, int directed) {
@@ -133,7 +160,7 @@ Graph *readGraphFromFile(const char *filename, int directed) {
             if(graph != NULL){
                 int vertex1, vertex2;
                 sscanf(buffer, "e %d %d", &vertex1, &vertex2);
-                addNeighbor(graph->nodes, graph->numNodes, vertex1, vertex2);
+                addNeighbor(graph->nodes, graph->numNodes, vertex1, vertex2, graph->directed);
             }else{
                 fprintf(stderr, "Graphe non instancie\n");
                 exit(-1);
@@ -153,6 +180,7 @@ Node** initializeNodes(int numNodes){
         nodeArray[i]->nbNeighbor = 0;
         nodeArray[i]->otherNodes = NULL;
         nodeArray[i]->colorArray = initializeColorArray();
+        nodeArray[i]->currentColor = VIDE;
     }
     return nodeArray;
 }

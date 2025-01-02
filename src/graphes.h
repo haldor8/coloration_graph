@@ -25,6 +25,7 @@ typedef struct {
         struct Vertex **otherNodes;
         int nbNeighbor;
         int* colorArray;
+        int currentColor;
 }Node;
 
 typedef struct {
@@ -43,6 +44,7 @@ typedef struct {
 void freeNode(Node *node);
 void freeGraph(Graph *graph);
 void freeVertices(struct Vertex** verticies, int arraySize);
+void freeColorArray(int* array);
 
 
 Vertex* addVertex(Node* finalNode, int weight);
@@ -53,7 +55,7 @@ Graph *readGraphFromFile(const char *filename, int directed);
 Graph *createGraph(int numNodes, int directed);
 
 void displayArcs(Vertex* arcList, int length);
-void addNeighbor(Node** array, int arraySize, int sourceNodeId, int finalNodeId);
+void addNeighbor(Node** array, int arraySize, int sourceNodeId, int finalNodeId, int isDirected);
 Node* findNode(Node** array, int arraySize, int soughtNode);
 
 void displayNeighbors(int nodeId, Vertex** nodeArray, int arraySize);
