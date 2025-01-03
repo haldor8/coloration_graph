@@ -39,11 +39,11 @@ void freeNode(Node *node) {
     free(node);
 }
 
-void freeVertices(struct Vertex** verticies, int arraySize){
+void freeVertices(struct Vertex** vertices, int arraySize){
     for(int i = 0; i < arraySize; i++){
-        free(verticies[i]);
+        free(vertices[i]);
     }
-    free(verticies);
+    free(vertices);
 }
 
 void freeGraph(Graph *graph) {
@@ -197,14 +197,6 @@ Graph *createGraph(int numNodes, int directed) {
     return graph;
 }
 
-/*
-void displayArcs(Vertex* arcList, int length){
-    for(int i = 0; i < length; i++){
-        printf("Vertex1 : %d, vertex2 : %d, weight : %d\n", arcList[i].vertex1, arcList[i].vertex2, arcList[i].weight);
-    }
-}
-*/
-
 void displayNeighbors(int nodeId, Vertex** verticiesArray, int arraySize){
     if(arraySize == 0){
         printf("Noeud numero %d : aucun voisin", nodeId);
@@ -222,6 +214,6 @@ void displayNeighbors(int nodeId, Vertex** verticiesArray, int arraySize){
 void graphToString(Graph* graph){
     printf("Graphe avec %d noeuds et %d arcs.\n", graph->numNodes, graph->numArcs);
     for(int i = 0; i < graph->numNodes; i++){
-        displayNeighbors(graph->nodes[i]->id, (Vertex **)graph->nodes[i]->otherNodes, graph->nodes[i]->nbNeighbor);
+        displayNode(graph->nodes[i]->id, (Vertex **)graph->nodes[i]->otherNodes, graph->nodes[i]->nbNeighbor);
     }
 }

@@ -42,21 +42,19 @@ typedef struct {
 
 void freeNode(Node *node);
 void freeGraph(Graph *graph);
-void freeVertices(struct Vertex** verticies, int arraySize);
+void freeVertices(struct Vertex** vertices, int arraySize);
 void freeColorArray(int* array);
 
 
 Vertex* addVertex(Node* finalNode, int weight);
-
 int* initializeColorArray();
+void addNeighbor(Graph* graph, int sourceNodeId, int finalNodeId);
+Node* findNode(Node** array, int arraySize, int soughtNode);
 
 Graph *readGraphFromFile(const char *filename, int directed);
 Graph *createGraph(int numNodes, int directed);
 
-void displayArcs(Vertex* arcList, int length);
-void addNeighbor(Graph* graph, int sourceNodeId, int finalNodeId);
-Node* findNode(Node** array, int arraySize, int soughtNode);
 
-void displayNeighbors(int nodeId, Vertex** nodeArray, int arraySize);
+void displayNode(int nodeId, Vertex** nodeArray, int arraySize);
 void graphToString(Graph* graph);
 #endif
