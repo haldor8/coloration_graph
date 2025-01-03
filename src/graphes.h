@@ -35,7 +35,6 @@ typedef struct {
 
 typedef struct {
         Node **nodes;
-        Vertex *vertices;
         int numNodes;
         int numArcs;
         int directed; // 1 si oui 0 si non
@@ -55,7 +54,7 @@ Graph *readGraphFromFile(const char *filename, int directed);
 Graph *createGraph(int numNodes, int directed);
 
 void displayArcs(Vertex* arcList, int length);
-void addNeighbor(Node** array, int arraySize, int sourceNodeId, int finalNodeId, int isDirected);
+void addNeighbor(Graph* graph, int sourceNodeId, int finalNodeId);
 Node* findNode(Node** array, int arraySize, int soughtNode);
 
 void displayNeighbors(int nodeId, Vertex** nodeArray, int arraySize);
