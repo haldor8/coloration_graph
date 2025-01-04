@@ -4,27 +4,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
+#define VIDE 0
 
-enum colors{
-    VIDE,
-    BLANC,
-    GRIS,
-    NOIR,
-    BLEU,
-    ROUGE,
-    VERT,
-    JAUNE,
-    ROSE,
-    VIOLET,
-    MARRON,
-    ORANGE
-};
+// enum colors{
+//     VIDE,
+//     BLANC,
+//     GRIS,
+//     NOIR,
+//     BLEU,
+//     ROUGE,
+//     VERT,
+//     JAUNE,
+//     ROSE,
+//     VIOLET,
+//     MARRON,
+//     ORANGE
+// };
 
 extern const char* colorsToString[];
 
 #define ENUM_SIZE 12 // Taille = "index" du dernier élément +1
 
 struct Vertex;
+
+
 
 typedef struct {
         int id;

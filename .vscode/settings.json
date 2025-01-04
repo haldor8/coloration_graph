@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "welshpowell.h": "c",
+        "graphes.h": "c",
+        "stdlib.h": "c"
+    }
+}

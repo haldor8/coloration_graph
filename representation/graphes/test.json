@@ -1,44 +1,72 @@
 {
 "nom" : "../representation/graphes/test.json",
-"nbArcs" : "2",
-"nbNoeuds" : "5",
+"nbArcs" : "10",
+"nbNoeuds" : "6",
 "noeuds" : [
 {
 "nom" : "1",
-"couleur" : "VIDE",
+"couleur" : "#000000",
 "arcs" : [
 {
 "nom" :"2","poids" :"1"
-}
-,
+},
 {
 "nom" :"3","poids" :"1"
+},
+{
+"nom" :"5","poids" :"1"
 }
-
 ]
 },
 {
 "nom" : "2",
-"couleur" : "VIDE",
+"couleur" : "#000000",
 "arcs" : [
+{
+"nom" :"4","poids" :"1"
+}
 ]
 },
 {
 "nom" : "3",
-"couleur" : "VIDE",
+"couleur" : "#000000",
 "arcs" : [
+{
+"nom" :"5","poids" :"1"
+},
+{
+"nom" :"4","poids" :"1"
+}
 ]
 },
 {
 "nom" : "4",
-"couleur" : "VIDE",
+"couleur" : "#000000",
 "arcs" : [
+{
+"nom" :"5","poids" :"1"
+}
 ]
 },
 {
 "nom" : "5",
-"couleur" : "VIDE",
+"couleur" : "#000000",
 "arcs" : [
+]
+},
+{
+"nom" : "6",
+"couleur" : "#000000",
+"arcs" : [
+{
+"nom" :"5","poids" :"1"
+},
+{
+"nom" :"2","poids" :"1"
+},
+{
+"nom" :"4","poids" :"1"
+}
 ]
 }
 ]
