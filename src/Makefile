@@ -8,7 +8,7 @@ OBJS = $(SRCS:.c=.o)
 EXEC = color_graph
 
 # Ne fonctionne que pour l'OS lui-même, si on utilise Cygwin sur Windows, il faut utiliser "man_clean_l"
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS), Windows_NT)
     RM = del /Q
 else
     RM = rm -f
@@ -16,7 +16,7 @@ endif
 
 # Règle pour créer l'exécutable
 $(EXEC): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ -lpthread
+	$(CC) $(CFLAGS) -o $@ $^
 
 # Règle pour compiler les fichiers objets
 %.o: %.c
@@ -24,7 +24,8 @@ $(EXEC): $(OBJS)
 
 # Règle pour nettoyer les fichiers générés
 clean:
-	$(RM) $(OBJS) $(EXEC)
+	$(RM) *.o
+	$(RM) *.exe
 
 # Règle pour nettoyer manuellement
 man_clean_w:
