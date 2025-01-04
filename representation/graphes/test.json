@@ -1,0 +1,45 @@
+{
+"nom" : "../representation/graphes/test.json",
+"nbArcs" : "2",
+"nbNoeuds" : "5",
+"noeuds" : [
+{
+"nom" : "1",
+"couleur" : "BLEU",
+"arcs" : [
+{
+"nom" :"2","poids" :"1"
+}
+,
+{
+"nom" :"3","poids" :"1"
+}
+
+]
+},
+{
+"nom" : "2",
+"couleur" : "ROUGE",
+"arcs" : [
+]
+},
+{
+"nom" : "3",
+"couleur" : "VERT",
+"arcs" : [
+]
+},
+{
+"nom" : "4",
+"couleur" : "ORANGE",
+"arcs" : [
+]
+},
+{
+"nom" : "5",
+"couleur" : "VIOLET",
+"arcs" : [
+]
+}
+]
+}

@@ -8,7 +8,7 @@ OBJS = $(SRCS:.c=.o)
 EXEC = color_graph
 
 # Ne fonctionne que pour l'OS lui-même, si on utilise Cygwin sur Windows, il faut utiliser "man_clean_l"
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS), Windows_NT)
     RM = del /Q
 else
     RM = rm -f

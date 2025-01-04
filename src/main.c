@@ -16,6 +16,7 @@ int main() {
     Graph *graphFromFile = readGraphFromFile("graph/graphTest.col", 0);
     if (graphFromFile) {
         graphToString(graphFromFile);
+        saveColoredGraph("../representation/graphes/test.json", graphFromFile);
         freeGraph(graphFromFile);
         printf("Graph from file memory freed\n");
     } else {

@@ -1,7 +1,20 @@
 // #include <cstdlib>
-#include <stdio.h>
-#include <stdlib.h>
 #include "graphes.h"
+
+const char* colorsToString[] = {
+    "VIDE", 
+    "BLANC",
+    "GRIS", 
+    "NOIR", 
+    "BLEU", 
+    "ROUGE",
+    "VERT", 
+    "JAUNE",
+    "ROSE", 
+    "VIOLET"
+    "MARRON"
+    "ORANGE"
+};
 
 int* initializeColorArray(){
     int* initializedArray = (int*)malloc(ENUM_SIZE * sizeof(int)); // On alloue un tableau contenant toutes les couleurs possibles
@@ -97,10 +110,11 @@ Node* findNode(Node** array, int arraySize, int soughtNode){
     return NULL;
 }
 
-Vertex* addVertex(Node* finalNode, int weight){
+Vertex* addVertex(Node* finalNode, int weight, int duplicated){
     Vertex* newVertex = malloc(sizeof(Vertex));
     newVertex->otherNode = finalNode;
     newVertex->weight = weight;
+    newVertex->duplicated = duplicated;
     return newVertex;
 }
 
@@ -116,7 +130,7 @@ void addNeighbor(Graph* graph, int sourceNodeId, int finalNodeId){
     }
 
     sourceNode->otherNodes = (struct Vertex**)newArray;
-    sourceNode->otherNodes[sourceNode->nbNeighbor] = (struct Vertex*)addVertex(finalNode, 1);
+    sourceNode->otherNodes[sourceNode->nbNeighbor] = (struct Vertex*)addVertex(finalNode, 1, 0); // Duplicated est à 0 car c'est le vertex principal qu'on ajoute
     sourceNode->nbNeighbor += 1;
 
     if(!graph->directed){ // Si le graphe est non-orienté, alors on ajoute aussi l'arc dans l'autre sens
@@ -128,7 +142,7 @@ void addNeighbor(Graph* graph, int sourceNodeId, int finalNodeId){
         }
 
         finalNode->otherNodes = (struct Vertex**)secondArray;
-        finalNode->otherNodes[finalNode->nbNeighbor] = (struct Vertex*)addVertex(sourceNode, 1);
+        finalNode->otherNodes[finalNode->nbNeighbor] = (struct Vertex*)addVertex(sourceNode, 1, 1); // Duplicated est à 1, de ce fait
         finalNode->nbNeighbor += 1;
     }
 
@@ -168,6 +182,64 @@ Graph *readGraphFromFile(const char *filename, int directed) {
     return graph;
 }
 
+void saveGraph(char* filename, Graph* graph){ // Format col
+    FILE* file = fopen(filename, "w");
+    fprintf(file, "c %s\n", filename);
+    fprintf(file, "p edge %d %d", graph->numNodes, graph->numArcs);
+    for(int node = 0; node < graph->numNodes; node++){
+        Node* currNode = graph->nodes[node];
+        for(int vertex = 0; vertex < currNode->nbNeighbor; vertex++){
+            Vertex* currVertex = (Vertex *)currNode->otherNodes[vertex];
+            if(currVertex->duplicated == 0){ // Si ce n'est pas un arc dupliqué car le graphe est non-orienté
+                fprintf(file, "e %d %d", currNode->id, currVertex->otherNode->id);
+            }
+        }
+    }
+}
+
+void saveColoredGraph(char* filename, Graph* graph){ // Format json
+
+    printf("Sauvegarde du graphe : %s\n", filename);
+    FILE* file = fopen(filename, "w");
+    fprintf(file, "{\n");
+    fprintf(file, "\"nom\" : \"%s\",\n", filename);
+    fprintf(file, "\"nbArcs\" : \"%d\",\n", graph->numArcs);
+    fprintf(file, "\"nbNoeuds\" : \"%d\",\n", graph->numNodes);
+
+    fprintf(file, "\"noeuds\" : [\n");
+    for(int node = 0; node < graph->numNodes; node++){
+        fprintf(file, "{\n");
+        Node* currNode = graph->nodes[node];
+
+        fprintf(file, "\"nom\" : \"%d\",\n", currNode->id);
+        
+        fprintf(file, "\"couleur\" : \"%s\",\n", colorsToString[currNode->currentColor]);
+        
+        fprintf(file, "\"arcs\" : [\n");
+        for(int vertex = 0; vertex < currNode->nbNeighbor; vertex++){
+            Vertex* currVertex = (Vertex *)currNode->otherNodes[vertex];
+            if(currVertex->duplicated == 0){ // Si ce n'est pas un arc dupliqué car le graphe est non-orienté
+                fprintf(file, "{\n");
+                fprintf(file, "\"nom\" :\"%d\",", currVertex->otherNode->id);
+                fprintf(file, "\"poids\" :\"%d\"\n", currVertex->weight);
+                fprintf(file, "}\n");
+                if(vertex < currNode->nbNeighbor - 1){
+                    fprintf(file, ",");
+                }
+                fprintf(file, "\n");
+            }
+        }
+        fprintf(file, "]\n");
+
+        fprintf(file, "}");
+        if(node < graph->numNodes - 1){
+            fprintf(file, ",");
+        }
+        fprintf(file, "\n");
+    }
+    fprintf(file, "]\n}");
+}
+
 Node** initializeNodes(int numNodes){
     Node** nodeArray = (Node **)malloc(numNodes * sizeof(Node*));
 
@@ -197,7 +269,7 @@ Graph *createGraph(int numNodes, int directed) {
     return graph;
 }
 
-void displayNeighbors(int nodeId, Vertex** verticiesArray, int arraySize){
+void displayNode(int nodeId, Vertex** verticiesArray, int arraySize){
     if(arraySize == 0){
         printf("Noeud numero %d : aucun voisin", nodeId);
         printf("\n");
