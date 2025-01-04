@@ -1,6 +1,7 @@
 // #include <cstdlib>
 #include "graphes.h"
 
+/* // Vestiges
 const char* colorsToString[] = {
     "VIDE", 
     "BLANC",
@@ -11,11 +12,34 @@ const char* colorsToString[] = {
     "VERT", 
     "JAUNE",
     "ROSE", 
-    "VIOLET"
-    "MARRON"
+    "VIOLET",
+    "MARRON",
     "ORANGE"
 };
+*/
+// Fonction de hachage pour rendre les couleurs semi-aléatoires
+uint32_t hash_function(uint32_t x) {
+    x = ((x >> 16) ^ x) * 0x45d9f3b;  // Mélange le nombre
+    x = ((x >> 16) ^ x) * 0x45d9f3b;  // Mélange à nouveau
+    x = (x >> 16) ^ x;                // Finalise le hachage
+    return x;
+}
 
+// Fonction qui retourne une couleur en format #RRGGBB
+char *intToColor(int input) {
+    static char output[8];                      // Chaîne pour stocker la couleur
+    uint32_t hash = hash_function((uint32_t)input); // Génère un hash unique
+    uint8_t r = (hash & 0xFF0000) >> 16;           // Composante rouge
+    uint8_t g = (hash & 0x00FF00) >> 8;            // Composante verte
+    uint8_t b = (hash & 0x0000FF);                 // Composante bleue
+
+    // Formater la couleur dans la chaîne de sortie au format #RRGGBB
+    sprintf(output, "#%02X%02X%02X", r, g, b);
+
+    return output; // Retourner la chaîne
+}
+
+/* // Vestiges
 int* initializeColorArray(){
     int* initializedArray = (int*)malloc(ENUM_SIZE * sizeof(int)); // On alloue un tableau contenant toutes les couleurs possibles
     for(int i = 0; i < ENUM_SIZE; i++){
@@ -41,10 +65,10 @@ void removeColorFromArray(int* array, int color){
 void freeColorArray(int* array){
     free(array);
 }
-
+*/
 
 void freeNode(Node *node) {
-    freeColorArray(node->colorArray);
+    // freeColorArray(node->colorArray);
     if (node->otherNodes) {
         freeVertices(node->otherNodes, node->nbNeighbor);
         node->otherNodes = NULL;
@@ -65,7 +89,8 @@ void freeGraph(Graph *graph) {
 
     for (int i = 0; i < graph->numNodes; i++) {
         freeNode(graph->nodes[i]);
-        printf("Node[%d] memory freed\n", i);
+
+        // printf("Node[%d] memory freed\n", i); // Ligne de debug
     }
 
     free(graph->nodes);
@@ -213,7 +238,7 @@ void saveColoredGraph(char* filename, Graph* graph){ // Format json
 
         fprintf(file, "\"nom\" : \"%d\",\n", currNode->id);
         
-        fprintf(file, "\"couleur\" : \"%s\",\n", colorsToString[currNode->currentColor]);
+        fprintf(file, "\"couleur\" : \"%s\",\n", intToColor(currNode->currentColor));
         
         fprintf(file, "\"arcs\" : [\n");
         for(int vertex = 0; vertex < currNode->nbNeighbor; vertex++){
@@ -222,9 +247,13 @@ void saveColoredGraph(char* filename, Graph* graph){ // Format json
                 fprintf(file, "{\n");
                 fprintf(file, "\"nom\" :\"%d\",", currVertex->otherNode->id);
                 fprintf(file, "\"poids\" :\"%d\"\n", currVertex->weight);
-                fprintf(file, "}\n");
+                fprintf(file, "}");
+
                 if(vertex < currNode->nbNeighbor - 1){
-                    fprintf(file, ",");
+                    Vertex* nextVertex = (Vertex *)currNode->otherNodes[vertex+1];
+                    if(nextVertex->duplicated == 0){
+                        fprintf(file, ",");
+                    }
                 }
                 fprintf(file, "\n");
             }
@@ -248,7 +277,7 @@ Node** initializeNodes(int numNodes){
         nodeArray[i]->id = i + 1;
         nodeArray[i]->nbNeighbor = 0;
         nodeArray[i]->otherNodes = NULL;
-        nodeArray[i]->colorArray = initializeColorArray();
+        // nodeArray[i]->colorArray = initializeColorArray();
         nodeArray[i]->currentColor = VIDE;
     }
     return nodeArray;
@@ -287,5 +316,37 @@ void graphToString(Graph* graph){
     printf("Graphe avec %d noeuds et %d arcs.\n", graph->numNodes, graph->numArcs);
     for(int i = 0; i < graph->numNodes; i++){
         displayNode(graph->nodes[i]->id, (Vertex **)graph->nodes[i]->otherNodes, graph->nodes[i]->nbNeighbor);
+    }
+}
+
+int verifierColoration(Graph* graph){ // 1 = Coloration valide, 0 = erreur
+    for(int node = 0; node < graph->numNodes; node++){
+        Node* currNode = graph->nodes[node];
+        for(int vertex = 0; vertex < currNode->nbNeighbor; vertex++){
+            Vertex* currVertex = (Vertex*)currNode->otherNodes[vertex];
+            if(currNode->currentColor == currVertex->otherNode->currentColor){
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+int couleurLaPlusGrande(Graph* graph){
+    int currColor = -1;
+    for(int node = 0; node < graph->numNodes; node++){
+        Node* currNode = graph->nodes[node];
+        if(currNode->currentColor > currColor){
+            currColor = currNode->currentColor;
+        }
+    }
+    return currColor;
+}
+
+
+void resetColoring(Graph *graph){
+    for(int node = 0; node < graph->numNodes; node++){
+        Node* currNode = graph->nodes[node];
+        currNode->currentColor = 0;
     }
 }

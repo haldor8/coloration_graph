@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <stdint.h>
+#define VIDE 0
+/* // Vestiges
 enum colors{
     VIDE,
     BLANC,
@@ -23,14 +26,12 @@ enum colors{
 extern const char* colorsToString[];
 
 #define ENUM_SIZE 12 // Taille = "index" du dernier élément +1
-
-struct Vertex;
-
+*/
 typedef struct {
         int id;
         struct Vertex **otherNodes;
         int nbNeighbor;
-        int* colorArray;
+        // int* colorArray; // Vestiges
         int currentColor;
 }Node;
 
@@ -52,6 +53,8 @@ void freeGraph(Graph *graph);
 void freeVertices(struct Vertex** vertices, int arraySize);
 void freeColorArray(int* array);
 
+char* intToColor(int);
+
 
 Vertex* addVertex(Node* finalNode, int weight, int directed);
 int* initializeColorArray();
@@ -67,4 +70,8 @@ void saveColoredGraph(char* filename, Graph* graph);
 
 void displayNode(int nodeId, Vertex** nodeArray, int arraySize);
 void graphToString(Graph* graph);
+
+int verifierColoration(Graph* graph);
+int couleurLaPlusGrande(Graph* graph);
+void resetColoring(Graph *graph);
 #endif
