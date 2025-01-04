@@ -5,7 +5,7 @@
 "noeuds" : [
 {
 "nom" : "1",
-"couleur" : "BLEU",
+"couleur" : "VIDE",
 "arcs" : [
 {
 "nom" :"2","poids" :"1"
@@ -19,25 +19,25 @@
 },
 {
 "nom" : "2",
-"couleur" : "ROUGE",
+"couleur" : "VIDE",
 "arcs" : [
 ]
 },
 {
 "nom" : "3",
-"couleur" : "VERT",
+"couleur" : "VIDE",
 "arcs" : [
 ]
 },
 {
 "nom" : "4",
-"couleur" : "ORANGE",
+"couleur" : "VIDE",
 "arcs" : [
 ]
 },
 {
 "nom" : "5",
-"couleur" : "VIOLET",
+"couleur" : "VIDE",
 "arcs" : [
 ]
 }
