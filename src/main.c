@@ -23,7 +23,8 @@ double runAlgorithm(int (*algorithm)(Graph*), Graph* graph, int times) {
     return average;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+    /*
     // Test 1 : Création manuelle du graphe
     printf("\n=== Test 1: Creation manuelle du graphe ===\n");
     Graph *graph = createGraph(5, 0);
@@ -32,50 +33,40 @@ int main() {
     if (graph) {
         printf("Graph memory freed\n");
     }
-
-    /*
-    // Test 2 : Lecture depuis un fichier
-    printf("\n=== Test 2: Lecture depuis un fichier ===\n");
-    Graph *graphFromFile = readGraphFromFile("graph/DSJC1000.9.col", 0);
-    if (graphFromFile) {
-        graphToString(graphFromFile, 0);
-        printf("Temps d'execution moyen : %lf ms\n", runAlgorithm(&colorGraphDSatur, graphFromFile, 10));
-        printf("Est-ce que la coloration est valide : %d\n", checkColoring(graphFromFile));
-        printf("Nombre de couleurs utilisees : %d\n", biggestColor(graphFromFile));
-        //saveColoredGraph("../representation/graphes/test.json", graphFromFile);
-
-        freeGraph(graphFromFile);
-        printf("Graph from file memory freed\n");
-    } else {
-        printf("Failed to read graph from file\n");
-    }
     */
+
+    if(argc != 4 && argc != 5){
+        fprintf(stderr, "Nombre de parametres invalide. Utilisation : \"./color_graph.exe <dossier/fichier.extension> <dsatur | welshpowell> <nb_executions> opt : <sauvegarder>\n");
+        exit(-1);
+    }
+
+    int (*algo)(Graph*);
+    if(!strcmp(argv[2], "dsatur")){
+        algo = &colorGraphDSatur;
+    }else if(!strcmp(argv[2], "welshpowell")){
+        algo = &welshPowell;
+    }else{
+        fprintf(stderr, "Algorithme inconnu ou mal tape. Veuillez choisir parmis ceux connus <dsatur | welshpowell>\n");
+        exit(-1);
+    }
 
     // Test 3 : Lecture depuis un fichier
-    printf("\n=== Test 3: Lecture depuis un fichier algorithme WELSH-POWELL ===\n");
-    Graph *graphFromFile2 = readGraphFromFile("graph/DSJC1000.9.col", 0);
-    if (graphFromFile2) {
-        graphToString(graphFromFile2, 0);
-        printf("Temps d'execution moyen : %lf ms\n", runAlgorithm(&welshPowell, graphFromFile2, 10));
-        printf("Est-ce que la coloration est valide : %d\n", checkColoring(graphFromFile2));
-        printf("Nombre de couleurs utilisees : %d\n", biggestColor(graphFromFile2));
-        //saveColoredGraph("../representation/graphes/test.json", graphFromFile);
+    printf("\n=== Coloration de %s par l'algorithme %s ===\n", argv[1], argv[2]);
+    Graph *graphFromFile = readGraphFromFile(argv[1], 0);
+    if (graphFromFile) {
+        graphToString(graphFromFile, 0);
+        printf("Temps d'execution moyen : %lf ms\n", runAlgorithm(algo, graphFromFile, atoi(argv[3])));
+        printf("Est-ce que la coloration est valide : %d\n", checkColoring(graphFromFile));
+        printf("Nombre de couleurs utilisees : %d\n", biggestColor(graphFromFile));
 
-        freeGraph(graphFromFile2);
-        printf("Graph from file memory freed\n");
-    } else {
-        printf("Failed to read graph from file\n");
+        if(argc == 5){
+            if(!strcmp(argv[4], "sauvegarder")){
+                saveColoredGraph("../representation/graphes/resultat.json", graphFromFile);   
+            }
+        }
+
+        freeGraph(graphFromFile);
     }
 
-    
-    /*
-    clock_t start = clock();
-    colorGraphDSatur(graphFromFile);
-    clock_t end = clock();
-
-    printf("Temps d'execution : %lf ms\n", (double)(end - start));
-    printf("Est-ce que la coloration est valide : %d\n", verifierColoration(graphFromFile));
-    printf("Nombre de couleurs utilisees : %d\n", couleurLaPlusGrande(graphFromFile));
-    */
     return 0;
 }

@@ -3,7 +3,7 @@
 int getSaturationDegree(Node* node) {
     int count = 0;
     for (int i = 0; i < node->nbNeighbor; i++) {
-        Vertex* neighbor = (Vertex*)node->otherNodes[i];
+        Edge* neighbor = (Edge*)node->otherNodes[i];
         int neighborColor = neighbor->otherNode->currentColor;
         if (neighborColor != VIDE) {
             count++;
@@ -17,7 +17,7 @@ int getSaturationDegree(Node* node) {
 int getUncoloredDegree(Node* node) {
     int count = 0;
     for (int i = 0; i < node->nbNeighbor; i++) {
-        Vertex* neighbor = (Vertex*)node->otherNodes[i];
+        Edge* neighbor = (Edge*)node->otherNodes[i];
         if (neighbor->otherNode->currentColor == VIDE) {
             count++;
         }
@@ -27,7 +27,7 @@ int getUncoloredDegree(Node* node) {
 
 
 // Trouve le prochain noeud selon les critères de DSatur
-Node* getNextVertex(Graph* graph) {
+Node* getNextEdge(Graph* graph) {
     Node* maxNode = NULL;
     int maxSaturation = -1;
     int maxDegree = -1;
@@ -63,7 +63,7 @@ int findAvailableColor(Node* node, int numNodes) {
     }
 
     for (int i = 0; i < node->nbNeighbor; i++) {
-        Vertex* neighbor = (Vertex*)node->otherNodes[i];
+        Edge* neighbor = (Edge*)node->otherNodes[i];
         int neighborColor = neighbor->otherNode->currentColor;
         if (neighborColor != VIDE) {
             usedColors[neighborColor] = 1; // La couleur est utilisée
@@ -94,7 +94,7 @@ int colorGraphDSatur(Graph* graph) {
     
     // Colorer les noeuds un à un
     while (nodesColored < graph->numNodes) {
-        Node* nextNode = getNextVertex(graph);
+        Node* nextNode = getNextEdge(graph);
         if (!nextNode) break;
         
         int color = findAvailableColor(nextNode, graph->numNodes);

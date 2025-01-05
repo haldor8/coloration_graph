@@ -12,7 +12,7 @@ int compareDegree(const void* a, const void* b){
 
 int areNeighbors(Node* node1, Node* node2) {
     for (int i = 0; i < node1->nbNeighbor; i++) {
-        Vertex* neighbor = (Vertex*)node1->otherNodes[i];
+        Edge* neighbor = (Edge*)node1->otherNodes[i];
         if (neighbor && neighbor->otherNode && neighbor->otherNode->id == node2->id) {
             return 1;
         }
@@ -30,7 +30,7 @@ int findAvailableColor_wp(Node* node, int maxColors) {
 
     // Marquer les couleurs utilisées par les voisins
     for (int i = 0; i < node->nbNeighbor; i++) {
-        Vertex* neighbor = (Vertex*)node->otherNodes[i];
+        Edge* neighbor = (Edge*)node->otherNodes[i];
         if (neighbor && neighbor->otherNode) {
             int neighborColor = neighbor->otherNode->currentColor;
             if (neighborColor > 0) {  // Ignorer les nœuds non colorés

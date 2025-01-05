@@ -29,7 +29,7 @@ extern const char* colorsToString[];
 */
 typedef struct {
         int id;
-        struct Vertex **otherNodes; // Obligé de le définir comme tel car la structure vertex n'est pas encore déclaré aux yeux du compilateur
+        struct Edge **otherNodes; // Obligé de le définir comme tel car la structure vertex n'est pas encore déclaré aux yeux du compilateur
         int nbNeighbor;
         // int* colorArray; // Vestiges
         int currentColor;
@@ -39,7 +39,7 @@ typedef struct {
         Node* otherNode; // Le voisin
         int duplicated; // Pour savoir si on doit l'ajouter ou non à la sauvegarde
         int weight; // Le poids de l'arc
-}Vertex;
+}Edge;
 
 typedef struct {
         Node **nodes; // La liste des noeuds
@@ -70,10 +70,10 @@ void freeNode(Node *node);
 
 /**
  * @brief Libère la mémoire allouée pour un tableau de sommets.
- * @param vertices Tableau de sommets.
+ * @param edges Tableau de sommets.
  * @param arraySize Taille du tableau.
  */
-void freeVertices(struct Vertex** vertices, int arraySize);
+void freeVertices(struct Edge** edges, int arraySize);
 
 /**
  * @brief Libère la mémoire allouée pour un graphe.
@@ -97,7 +97,7 @@ Node* findNode(Node** array, int arraySize, int soughtNode);
  * @param duplicated Indicateur si l'arc est dupliqué.
  * @return Un pointeur vers le sommet ajouté.
  */
-Vertex* addVertex(Node* finalNode, int weight, int duplicated);
+Edge* addEdge(Node* finalNode, int weight, int duplicated);
 
 /**
  * @brief Ajoute un voisin à un noeud dans un graphe.
@@ -150,7 +150,7 @@ Graph *createGraph(int numNodes, int directed);
  * @param verticiesArray Tableau des voisins.
  * @param arraySize Taille du tableau de voisins.
  */
-void displayNode(int nodeId, Vertex** verticiesArray, int arraySize);
+void displayNode(int nodeId, Edge** verticiesArray, int arraySize);
 
 /**
  * @brief Affiche les informations d'un graphe.
