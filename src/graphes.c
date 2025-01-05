@@ -258,10 +258,6 @@ void saveColoredGraph(char* filename, Graph* graph){ // Format json
                     if(nextVertex->duplicated == 0){
                         fprintf(file, ",");
                     }
-                    Vertex* nextVertex = (Vertex *)currNode->otherNodes[vertex+1];
-                    if(nextVertex->duplicated == 0){
-                        fprintf(file, ",");
-                    }
                 }
                 fprintf(file, "\n");
             }

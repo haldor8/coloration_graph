@@ -5,8 +5,8 @@
 
 int compareDegree(const void* a, const void* b);
 int areNeighbors(Node* node1, Node* node2);
-int findAvailableColor(Node* node, int numColors) ;
-void welshPowell(Graph *graph);
+int findAvailableColor_wp(Node* node, int numColors) ;
+int welshPowell(Graph *graph);
 
 
 #endif 

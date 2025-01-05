@@ -11,26 +11,26 @@ int compareDegree(const void* a, const void* b){
 }
 
 int areNeighbors(Node* node1, Node* node2) {
-    printf("Vérification des voisins pour les nœuds %d et %d\n", node1->id, node2->id);
+    // printf("Vérification des voisins pour les nœuds %d et %d\n", node1->id, node2->id);
     
     Vertex **neighbors = (Vertex **)node1->otherNodes;  // Liste des voisins du nœud 1
-    printf("Le nœud %d a %d voisins :\n", node1->id, node1->nbNeighbor);
+    // printf("Le nœud %d a %d voisins :\n", node1->id, node1->nbNeighbor);
     
     for (int i = 0; i < node1->nbNeighbor; i++) {
         Vertex* neighbor = neighbors[i];
         if (neighbor == NULL || neighbor->otherNode == NULL) {
-            printf("Attention : voisin[%d] est NULL.\n", i);
+            // printf("Attention : voisin[%d] est NULL.\n", i);
             continue;
         }
-        printf(" - Voisin %d (nœud %d)\n", i + 1, neighbor->otherNode->id);
+        // printf(" - Voisin %d (nœud %d)\n", i + 1, neighbor->otherNode->id);
 
         if (neighbor->otherNode == node2) {
-            printf("Le nœud %d est voisin du nœud %d.\n", node1->id, node2->id);
+            // printf("Le nœud %d est voisin du nœud %d.\n", node1->id, node2->id);
             return 1;  // Les nœuds sont voisins
         }
     }
 
-    printf("Le nœud %d n'est PAS voisin du nœud %d.\n", node1->id, node2->id);
+    // printf("Le nœud %d n'est PAS voisin du nœud %d.\n", node1->id, node2->id);
     return 0;  // Les nœuds ne sont pas voisins
 }
 
@@ -71,7 +71,7 @@ int areNeighbors(Node* node1, Node* node2) {
 
 
 
-int findAvailableColor(Node* node, int numColors) {
+int findAvailableColor_wp(Node* node, int numColors) {
     // Marquer les couleurs utilisées par les voisins
     int* usedColors = (int*)malloc(numColors * sizeof(int));
     if (!usedColors) {
@@ -104,18 +104,19 @@ int findAvailableColor(Node* node, int numColors) {
 }
 
 
-void welshPowell(Graph *graph) {
+int welshPowell(Graph *graph) {
     // Tri des nœuds par ordre décroissant du nombre de voisins
     qsort(graph->nodes, graph->numNodes, sizeof(Node*), compareDegree);
     
+    /*
     printf("Ordre des nœuds après tri :\n");
     for (int i = 0; i < graph->numNodes; i++) {
         printf("Nœud %d avec %d voisins\n", graph->nodes[i]->id, graph->nodes[i]->nbNeighbor);
     }
-
+    */
     for (int i = 0; i < graph->numNodes; i++) {
         if (graph->nodes[i]->currentColor == VIDE) {
-            int chosenColor = findAvailableColor(graph->nodes[i], ENUM_SIZE);
+            int chosenColor = findAvailableColor_wp(graph->nodes[i], graph->numNodes);
             if (chosenColor != -1) {
                 graph->nodes[i]->currentColor = chosenColor;
                 
@@ -128,5 +129,6 @@ void welshPowell(Graph *graph) {
             }
         }
     }
-    printf("Welsh-Powell terminé !\n");
+    // printf("Welsh-Powell terminé !\n");
+    return 0;
 }
