@@ -1,0 +1,73 @@
+{
+"nom" : "../representation/graphes/welshPowell.json",
+"nbArcs" : "10",
+"nbNoeuds" : "6",
+"noeuds" : [
+{
+"nom" : "4",
+"couleur" : "#251BA7",
+"arcs" : [
+{
+"nom" :"5","poids" :"1"
+}
+]
+},
+{
+"nom" : "5",
+"couleur" : "#A79298",
+"arcs" : [
+]
+},
+{
+"nom" : "3",
+"couleur" : "#B6D245",
+"arcs" : [
+{
+"nom" :"5","poids" :"1"
+},
+{
+"nom" :"4","poids" :"1"
+}
+]
+},
+{
+"nom" : "2",
+"couleur" : "#A79298",
+"arcs" : [
+{
+"nom" :"4","poids" :"1"
+}
+]
+},
+{
+"nom" : "6",
+"couleur" : "#B6D245",
+"arcs" : [
+{
+"nom" :"5","poids" :"1"
+},
+{
+"nom" :"2","poids" :"1"
+},
+{
+"nom" :"4","poids" :"1"
+}
+]
+},
+{
+"nom" : "1",
+"couleur" : "#251BA7",
+"arcs" : [
+{
+"nom" :"2","poids" :"1"
+},
+{
+"nom" :"3","poids" :"1"
+},
+{
+"nom" :"5","poids" :"1"
+}
+]
+}
+]
+}

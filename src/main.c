@@ -1,4 +1,6 @@
 #include "main.h"
+#include "welshPowell.h"
+#include "hillClimbing.h"
 
 double runAlgorithm(int (*algorithm)(Graph*), Graph* graph, int times) {
     double average = 0;
@@ -47,6 +49,23 @@ int main() {
     } else {
         printf("Failed to read graph from file\n");
     }
+    // Test 3 : Lecture depuis un fichier
+    printf("\n=== Test 3: Lecture depuis un fichier algorithme WELSH-POWELL ===\n");
+    Graph *graphFromFile2 = readGraphFromFile("graph/graphTest.col", 0);
+    if (graphFromFile2) {
+        graphToString(graphFromFile2, 0);
+
+        printf("\n=== Application de Welsh-Powell ===\n");
+        welshPowell(graphFromFile2);
+        graphToString(graphFromFile2, 0);
+
+        saveColoredGraph("../representation/graphes/welshPowell.json", graphFromFile2);
+        freeGraph(graphFromFile2);
+        printf("Graph from file memory freed\n");
+    } else {
+        printf("Failed to read graph from file\n");
+    }
+
     
     /*
     clock_t start = clock();

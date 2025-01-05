@@ -91,6 +91,8 @@ void freeGraph(Graph *graph) {
         freeNode(graph->nodes[i]);
 
         // printf("Node[%d] memory freed\n", i); // Ligne de debug
+
+        // printf("Node[%d] memory freed\n", i); // Ligne de debug
     }
 
     free(graph->nodes);
@@ -249,7 +251,13 @@ void saveColoredGraph(char* filename, Graph* graph){ // Format json
                 fprintf(file, "\"poids\" :\"%d\"\n", currVertex->weight);
                 fprintf(file, "}");
 
+                fprintf(file, "}");
+
                 if(vertex < currNode->nbNeighbor - 1){
+                    Vertex* nextVertex = (Vertex *)currNode->otherNodes[vertex+1];
+                    if(nextVertex->duplicated == 0){
+                        fprintf(file, ",");
+                    }
                     Vertex* nextVertex = (Vertex *)currNode->otherNodes[vertex+1];
                     if(nextVertex->duplicated == 0){
                         fprintf(file, ",");
@@ -277,6 +285,7 @@ Node** initializeNodes(int numNodes){
         nodeArray[i]->id = i + 1;
         nodeArray[i]->nbNeighbor = 0;
         nodeArray[i]->otherNodes = NULL;
+        // nodeArray[i]->colorArray = initializeColorArray();
         // nodeArray[i]->colorArray = initializeColorArray();
         nodeArray[i]->currentColor = VIDE;
     }
