@@ -1,8 +1,4 @@
 #include "main.h"
-#include "graphes.h"
-#include "DSATUR.h"
-
-#include "time.h"
 
 double runAlgorithm(int (*algorithm)(Graph*), Graph* graph, int times) {
     double average = 0;
@@ -37,7 +33,7 @@ int main() {
 
     // Test 2 : Lecture depuis un fichier
     printf("\n=== Test 2: Lecture depuis un fichier ===\n");
-    Graph *graphFromFile = readGraphFromFile("graph/inithx.col", 0);
+    Graph *graphFromFile = readGraphFromFile("graph/DSJC1000.9.col", 0);
     if (graphFromFile) {
         // graphToString(graphFromFile);
         graphToString(graphFromFile, 0);
