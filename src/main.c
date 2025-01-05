@@ -40,10 +40,10 @@ int main() {
     Graph *graphFromFile = readGraphFromFile("graph/inithx.col", 0);
     if (graphFromFile) {
         // graphToString(graphFromFile);
-        graphToString(graphFromFile);
+        graphToString(graphFromFile, 0);
         printf("Temps d'execution moyen : %lf ms\n", runAlgorithm(&colorGraphDSatur, graphFromFile, 10));
-        printf("Est-ce que la coloration est valide : %d\n", verifierColoration(graphFromFile));
-        printf("Nombre de couleurs utilisees : %d\n", couleurLaPlusGrande(graphFromFile));
+        printf("Est-ce que la coloration est valide : %d\n", checkColoring(graphFromFile));
+        printf("Nombre de couleurs utilisees : %d\n", biggestColor(graphFromFile));
         //saveColoredGraph("../representation/graphes/test.json", graphFromFile);
 
         freeGraph(graphFromFile);

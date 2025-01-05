@@ -13,7 +13,7 @@ int getSaturationDegree(Node* node) {
 }
 
 
-// Returns the number of uncolored neighbors
+// Donne le nombre de voisins déjà coloré
 int getUncoloredDegree(Node* node) {
     int count = 0;
     for (int i = 0; i < node->nbNeighbor; i++) {
@@ -26,7 +26,7 @@ int getUncoloredDegree(Node* node) {
 }
 
 
-// Find the next vertex to color based on DSatur criteria
+// Trouve le prochain noeud selon les critères de DSatur
 Node* getNextVertex(Graph* graph) {
     Node* maxNode = NULL;
     int maxSaturation = -1;
@@ -39,8 +39,7 @@ Node* getNextVertex(Graph* graph) {
         int saturation = getSaturationDegree(currentNode);
         int uncoloredDegree = getUncoloredDegree(currentNode);
 
-        // Select vertex with highest saturation degree
-        // If tied, select the one with highest uncolored degree
+        // Selectionner le noeud avec le plus haut taux de saturation
         if (saturation > maxSaturation || 
             (saturation == maxSaturation && uncoloredDegree > maxDegree)) {
             maxSaturation = saturation;
@@ -51,9 +50,9 @@ Node* getNextVertex(Graph* graph) {
     return maxNode;
 }
 
-// Find the lowest available color for a node
+// Trouve la couleur disponible la plus petite pour un noeud
 int findAvailableColor(Node* node, int numNodes) {
-    // Mark colors that are used by neighbors
+    // On initialise la liste des couleurs disponibles
     int* usedColors = (int*)malloc(numNodes * sizeof(int));
     if(!usedColors){
         fprintf(stderr, "Erreur lors de l'allocation de memoire.\n");
@@ -67,11 +66,10 @@ int findAvailableColor(Node* node, int numNodes) {
         Vertex* neighbor = (Vertex*)node->otherNodes[i];
         int neighborColor = neighbor->otherNode->currentColor;
         if (neighborColor != VIDE) {
-            usedColors[neighborColor] = 1;
+            usedColors[neighborColor] = 1; // La couleur est utilisée
         }
     }
     
-    // Find the lowest available color
     for (int color = 1; color < numNodes; color++) {
         if (!usedColors[color]) {
             free(usedColors);
@@ -79,22 +77,22 @@ int findAvailableColor(Node* node, int numNodes) {
         }
     }
     free(usedColors);
-    return -1; // No available color found
+    return -1; // Aucune couleur de trouvée
 }
 
-// Main DSatur algorithm function
+// Fonction principale
 int colorGraphDSatur(Graph* graph) {
     if (!graph || graph->numNodes == 0) return 0;
     
     int maxColorUsed = 0;
     int nodesColored = 0;
     
-    // Initialize all nodes as uncolored
+    // Initialiser tous les noeuds comme étant non coloré
     for (int i = 0; i < graph->numNodes; i++) {
         graph->nodes[i]->currentColor = VIDE;
     }
     
-    // Color vertices one by one
+    // Colorer les noeuds un à un
     while (nodesColored < graph->numNodes) {
         Node* nextNode = getNextVertex(graph);
         if (!nextNode) break;

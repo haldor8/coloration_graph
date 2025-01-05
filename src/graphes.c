@@ -312,14 +312,16 @@ void displayNode(int nodeId, Vertex** verticiesArray, int arraySize){
     }
 }
 
-void graphToString(Graph* graph){
+void graphToString(Graph* graph, int displayVertices){
     printf("Graphe avec %d noeuds et %d arcs.\n", graph->numNodes, graph->numArcs);
-    for(int i = 0; i < graph->numNodes; i++){
-        displayNode(graph->nodes[i]->id, (Vertex **)graph->nodes[i]->otherNodes, graph->nodes[i]->nbNeighbor);
+    if(displayVertices){
+        for(int i = 0; i < graph->numNodes; i++){
+            displayNode(graph->nodes[i]->id, (Vertex **)graph->nodes[i]->otherNodes, graph->nodes[i]->nbNeighbor);
+        }
     }
 }
 
-int verifierColoration(Graph* graph){ // 1 = Coloration valide, 0 = erreur
+int checkColoring(Graph* graph){ // 1 = Coloration valide, 0 = erreur
     for(int node = 0; node < graph->numNodes; node++){
         Node* currNode = graph->nodes[node];
         for(int vertex = 0; vertex < currNode->nbNeighbor; vertex++){
@@ -332,7 +334,7 @@ int verifierColoration(Graph* graph){ // 1 = Coloration valide, 0 = erreur
     return 1;
 }
 
-int couleurLaPlusGrande(Graph* graph){
+int biggestColor(Graph* graph){
     int currColor = -1;
     for(int node = 0; node < graph->numNodes; node++){
         Node* currNode = graph->nodes[node];
@@ -347,6 +349,6 @@ int couleurLaPlusGrande(Graph* graph){
 void resetColoring(Graph *graph){
     for(int node = 0; node < graph->numNodes; node++){
         Node* currNode = graph->nodes[node];
-        currNode->currentColor = 0;
+        currNode->currentColor = VIDE;
     }
 }
