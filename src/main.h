@@ -10,6 +10,20 @@
 #include "time.h"
 
 /**
+ * @brief Permet à l'utilisateur de créer un graphe à la main en définissant les nœuds et les arcs.
+ * 
+ * Cette fonction demande à l'utilisateur :
+ * - Le nombre de nœuds du graphe.
+ * - Le nombre d'arcs à créer.
+ * - Les connexions entre les nœuds (paires de nœuds formant les arcs).
+ * 
+ * Une fois le graphe créé, l'utilisateur peut appliquer un algorithme de coloration
+ * (DSATUR ou Welsh-Powell), afficher les résultats, et sauvegarder le graphe.
+ */
+void createGraphManually();
+
+
+/**
  * @brief Exécute un algorithme de coloration de graphe plusieurs fois et calcule la durée moyenne d'exécution.
  *
  * Cette fonction exécute un algorithme de coloration de graphe passé en paramètre sur un graphe donné,

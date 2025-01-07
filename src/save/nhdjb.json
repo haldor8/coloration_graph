@@ -1,0 +1,31 @@
+{
+"nom" : "save/nhdjb.json",
+"nbArcs" : "2",
+"nbNoeuds" : "3",
+"noeuds" : [
+{
+"nom" : "1",
+"couleur" : "#251BA7",
+"arcs" : [
+{
+"nom" :"2","poids" :"1"
+},
+{
+"nom" :"2","poids" :"1"
+}
+]
+},
+{
+"nom" : "2",
+"couleur" : "#A79298",
+"arcs" : [
+]
+},
+{
+"nom" : "3",
+"couleur" : "#251BA7",
+"arcs" : [
+]
+}
+]
+}

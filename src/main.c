@@ -5,6 +5,58 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+void createGraphManually() {
+    int numNodes, numEdges;
+    printf("\nCreation d'un graphe a la main.\n");
+    printf("Entrez le nombre de nœuds: ");
+    scanf("%d", &numNodes);
+
+    if (numNodes <= 0) {
+        fprintf(stderr, "Le nombre de nœuds doit être superieur a 0.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Entrez le nombre d'arcs: ");
+    scanf("%d", &numEdges);
+
+    Graph *graph = createGraph(numNodes, 0);
+
+    printf("\nAjoutez les arcs entre les nœuds (nœuds entre 1 et %d):\n", numNodes);
+    for (int i = 0; i < numEdges; i++) {
+        int node1, node2;
+        printf("Arc %d: Entrez les deux nœuds connectes (ex: 1 2): ", i + 1);
+        scanf("%d %d", &node1, &node2);
+
+        if (node1 < 1 || node1 > numNodes || node2 < 1 || node2 > numNodes) {
+            fprintf(stderr, "Les nœuds doivent être compris entre 1 et %d.\n", numNodes);
+            i--;  // Redemande cet arc si les nœuds sont invalides
+            continue;
+        }
+
+        addNeighbor(graph, node1, node2, 0);  // Ajout de l'arc entre les deux nœuds
+    }
+
+    printf("\nLe graphe a ete cree avec succès.\n");
+
+    int choice = selectAlgorithm();
+    int (*algorithm)(Graph *) = (choice == 1) ? colorGraphDSatur : welshPowell;
+
+    int nbExecutions;
+    printf("Entrez le nombre d'executions pour mesurer la performance: ");
+    scanf("%d", &nbExecutions);
+
+    printf("\nExecution de l'algorithme...\n");
+    double execTime = runAlgorithm(algorithm, graph, nbExecutions);
+    printf("Temps d'execution moyen: %.2f ms\n", execTime);
+    printf("Nombre de couleurs utilisees: %d\n", biggestColor(graph));
+    printf("Coloration valide: %s\n", checkColoring(graph) ? "Oui" : "Non");
+
+    saveResult(graph);
+    freeGraph(graph);
+}
+
+
 double runAlgorithm(int (*algorithm)(Graph *), Graph *graph, int times)
 {
     double average = 0;
@@ -37,10 +89,11 @@ int mainMenu() {
     printf("\n=== Menu Principal ===\n");
     printf("1. Colorer un graphe\n");
     printf("2. Verifier une coloration\n");
+    printf("3. Creer un graphe a la main\n");
     printf("Votre choix: ");
     scanf("%d", &choice);
-    if (choice != 1 && choice != 2) {
-        fprintf(stderr, "Choix invalide. Veuillez selectionner 1 ou 2.\n");
+    if (choice < 1 || choice > 3) {
+        fprintf(stderr, "Choix invalide. Veuillez selectionner 1, 2 ou 3.\n");
         exit(EXIT_FAILURE);
     }
     return choice;
@@ -154,6 +207,8 @@ int main() {
         colorGraph();  // Coloration d'un graphe
     } else if (choice == 2) {
         checkColoringInput();  // Verification d'une coloration
+    } else if (choice == 3) {
+        createGraphManually();  // Creation d'un graphe a la main
     }
 
     printf("\nFin du programme.\n");
