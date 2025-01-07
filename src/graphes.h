@@ -27,26 +27,29 @@ extern const char* colorsToString[];
 
 #define ENUM_SIZE 12 // Taille = "index" du dernier élément +1
 */
-typedef struct {
+typedef struct
+{
         int id;
         struct Edge **otherNodes; // Obligé de le définir comme tel car la structure vertex n'est pas encore déclaré aux yeux du compilateur
         int nbNeighbor;
         // int* colorArray; // Vestiges
         int currentColor;
-}Node;
+} Node;
 
-typedef struct {
-        Node* otherNode; // Le voisin
-        int duplicated; // Pour savoir si on doit l'ajouter ou non à la sauvegarde
-        int weight; // Le poids de l'arc
-}Edge;
+typedef struct
+{
+        Node *otherNode; // Le voisin
+        int duplicated;  // Pour savoir si on doit l'ajouter ou non à la sauvegarde
+        int weight;      // Le poids de l'arc
+} Edge;
 
-typedef struct {
+typedef struct
+{
         Node **nodes; // La liste des noeuds
         int numNodes; // Le nombre de noeuds
-        int numArcs; // Le nombre d'arcs
+        int numArcs;  // Le nombre d'arcs
         int directed; // 1 si oui 0 si non
-}Graph;
+} Graph;
 
 /**
  * @brief Mélange un entier pour produire un hachage unique.
@@ -73,7 +76,7 @@ void freeNode(Node *node);
  * @param edges Tableau de sommets.
  * @param arraySize Taille du tableau.
  */
-void freeVertices(struct Edge** edges, int arraySize);
+void freeVertices(struct Edge **edges, int arraySize);
 
 /**
  * @brief Libère la mémoire allouée pour un graphe.
@@ -88,7 +91,7 @@ void freeGraph(Graph *graph);
  * @param soughtNode Identifiant du noeud recherché.
  * @return Un pointeur vers le noeud trouvé, ou NULL si non trouvé.
  */
-Node* findNode(Node** array, int arraySize, int soughtNode);
+Node *findNode(Node **array, int arraySize, int soughtNode);
 
 /**
  * @brief Ajoute un sommet (vertex) reliant deux noeuds.
@@ -97,15 +100,16 @@ Node* findNode(Node** array, int arraySize, int soughtNode);
  * @param duplicated Indicateur si l'arc est dupliqué.
  * @return Un pointeur vers le sommet ajouté.
  */
-Edge* addEdge(Node* finalNode, int weight, int duplicated);
+Edge *addEdge(Node *finalNode, int weight, int duplicated);
 
 /**
  * @brief Ajoute un voisin à un noeud dans un graphe.
  * @param graph Le graphe.
  * @param sourceNodeId ID du noeud source.
  * @param finalNodeId ID du noeud cible.
+ * @param color couleur du noeud source.
  */
-void addNeighbor(Graph* graph, int sourceNodeId, int finalNodeId);
+void addNeighbor(Graph *graph, int sourceNodeId, int finalNodeId, int color);
 
 /**
  * @brief Lit un graphe à partir d'un fichier.
@@ -120,21 +124,21 @@ Graph *readGraphFromFile(const char *filename, int directed);
  * @param filename Nom du fichier de sortie.
  * @param graph Le graphe à sauvegarder.
  */
-void saveGraph(char* filename, Graph* graph);
+void saveGraph(char *filename, Graph *graph);
 
 /**
  * @brief Sauvegarde un graphe coloré au format JSON dans un fichier.
  * @param filename Nom du fichier de sortie.
  * @param graph Le graphe à sauvegarder.
  */
-void saveColoredGraph(char* filename, Graph* graph);
+void saveColoredGraph(char *filename, Graph *graph);
 
 /**
  * @brief Initialise un tableau de noeuds.
  * @param numNodes Nombre de noeuds à initialiser.
  * @return Un tableau de pointeurs vers les noeuds initialisés.
  */
-Node** initializeNodes(int numNodes);
+Node **initializeNodes(int numNodes);
 
 /**
  * @brief Crée un graphe vide avec un certain nombre de noeuds.
@@ -150,28 +154,28 @@ Graph *createGraph(int numNodes, int directed);
  * @param verticiesArray Tableau des voisins.
  * @param arraySize Taille du tableau de voisins.
  */
-void displayNode(int nodeId, Edge** verticiesArray, int arraySize);
+void displayNode(int nodeId, Edge **verticiesArray, int arraySize);
 
 /**
  * @brief Affiche les informations d'un graphe.
  * @param graph Le graphe à afficher.
  * @param displayVertices Si on doit afficher la liste de tous les arcs ou non. 1 = oui, 0 = non.
  */
-void graphToString(Graph* graph, int displayVertices);
+void graphToString(Graph *graph, int displayVertices);
 
 /**
  * @brief Vérifie si une coloration est valide pour un graphe. (Aucun noeud ne possède la même couleur qu'un voisin)
  * @param graph Le graphe.
  * @return 1 si valide, 0 sinon.
  */
-int checkColoring(Graph* graph);
+int checkColoring(Graph *graph);
 
 /**
  * @brief Trouve la couleur maximale utilisée dans un graphe.
  * @param graph Le graphe.
  * @return La couleur maximale.
  */
-int biggestColor(Graph* graph);
+int biggestColor(Graph *graph);
 
 /**
  * @brief Réinitialise les couleurs d'un graphe à 0.
