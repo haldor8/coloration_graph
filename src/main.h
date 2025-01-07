@@ -29,4 +29,38 @@
  */
 double runAlgorithm(int (*algorithm)(Graph*), Graph* graph, int times);
 
+
+/**
+ * @brief Affiche le menu principal et permet de choisir l'action à effectuer.
+ * 
+ * @return 1 si l'utilisateur choisit de colorer un graphe, 2 pour vérifier une coloration.
+ */
+int mainMenu();
+
+/**
+ * @brief Affiche le choix des algorithmes de coloration disponibles.
+ * 
+ * @return 1 pour DSATUR, 2 pour Welsh-Powell.
+ */
+int selectAlgorithm();
+
+/**
+ * @brief Sauvegarde la coloration d'un graphe au format JSON ou .col dans le dossier `save/`.
+ * 
+ * @param graph Pointeur vers le graphe coloré.
+ */
+void saveResult(Graph *graph);
+
+/**
+ * @brief Vérifie la validité de la coloration d'un graphe en lisant un fichier .col ou .json depuis le dossier `graph/`.
+ */
+void checkColoringInput();
+
+/**
+ * @brief Effectue la coloration d'un graphe en utilisant l'algorithme choisi par l'utilisateur.
+ * Lit un fichier .col depuis le dossier `graph/`, exécute la coloration, affiche le résultat et permet la sauvegarde.
+ */
+void colorGraph();
+
+
 #endif
