@@ -234,11 +234,6 @@ Graph *readGraphFromFile(const char *filename, int directed)
                 {
                     addNeighbor(graph, vertex1, vertex2, couleur); // Il y a une couleur alors on l'ajoute au graphe
                 }
-                else
-                {
-                    fprintf(stderr, "Nombre de colonnes invalide.\n");
-                    exit(-1);
-                }
             }
             else
             {
