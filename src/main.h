@@ -1,12 +1,18 @@
 #ifndef H_MAIN
 #define H_MAIN
+
+// Les librairies standards
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
-#include "graphes.h"
+// Les librairies de graphe
 #include "graphes.h"
 #include "DSATUR.h"
+#include "welshPowell.h"
+#include "hillClimbing.h"
 
+// Librairies diverses
 #include "time.h"
 
 /**

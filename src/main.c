@@ -1,10 +1,4 @@
 #include "main.h"
-#include "welshPowell.h"
-#include "hillClimbing.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 
 void createGraphManually() {
     int numNodes, numEdges;

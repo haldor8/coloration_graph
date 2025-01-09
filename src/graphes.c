@@ -74,19 +74,19 @@ void freeNode(Node *node)
     // freeColorArray(node->colorArray);
     if (node->otherNodes)
     {
-        freeVertices(node->otherNodes, node->nbNeighbor);
+        freeEdges(node->otherNodes, node->nbNeighbor);
         node->otherNodes = NULL;
     }
     free(node);
 }
 
-void freeVertices(struct Edge **vertices, int arraySize)
+void freeEdges(struct Edge **edges, int arraySize)
 {
     for (int i = 0; i < arraySize; i++)
     {
-        free(vertices[i]);
+        free(edges[i]);
     }
-    free(vertices);
+    free(edges);
 }
 
 void freeGraph(Graph *graph)
@@ -111,12 +111,12 @@ void freeGraph(Graph *graph)
 void addArc(Graph *graph, int vertex1, int vertex2) {
     printf("Arc to add: %d -> %d\n", vertex1, vertex2);
     if(graph->numArcs == 0){
-        graph->vertices = (Edge*)malloc(sizeof(Edge));
-        graph->vertices[graph->numArcs].otherNode = vertex2;
-        graph->vertices[graph->numArcs].weight = 1;
+        graph->edges = (Edge*)malloc(sizeof(Edge));
+        graph->edges[graph->numArcs].otherNode = vertex2;
+        graph->edges[graph->numArcs].weight = 1;
         graph->numArcs++; // On incrémente après car les index sont décalés de -1
     }else{
-        Arc* reallocatedArray = realloc(graph->vertices, (graph->numArcs + 1) * sizeof(Arc));
+        Arc* reallocatedArray = realloc(graph->edges, (graph->numArcs + 1) * sizeof(Arc));
         if(reallocatedArray){
             reallocatedArray[graph->numArcs].vertex1 = vertex1;
             reallocatedArray[graph->numArcs].vertex2 = vertex2;
@@ -165,20 +165,22 @@ void addNeighbor(Graph *graph, int sourceNodeId, int finalNodeId, int color)
     Edge **newArray;
     if (sourceNode->nbNeighbor == 0)
     {
-        newArray = (Edge **)malloc(sizeof(Edge *));
+        newArray = (Edge **)malloc(sizeof(Edge *)); // Si le noeud n'a pas encore d'arcs, alors on initialise la liste
     }
     else
     {
-        newArray = (Edge **)realloc(sourceNode->otherNodes, (sourceNode->nbNeighbor + 1) * sizeof(Edge *));
+        newArray = (Edge **)realloc(sourceNode->otherNodes, (sourceNode->nbNeighbor + 1) * sizeof(Edge *)); // On recrée le tableau en allouant un élément supplémentaire
     }
 
-    sourceNode->otherNodes = (struct Edge **)newArray;
+    sourceNode->otherNodes = (struct Edge **)newArray; // On ajoute le nouveau tableau réinitialisé
     sourceNode->otherNodes[sourceNode->nbNeighbor] = (struct Edge *)addEdge(finalNode, 1, 0); // Duplicated est à 0 car c'est le vertex principal qu'on ajoute
     sourceNode->nbNeighbor += 1;
     sourceNode->currentColor = color;
 
+    // Si le graphe est non-orienté, alors on ajoute aussi l'arc dans l'autre sens
     if (!graph->directed)
-    { // Si le graphe est non-orienté, alors on ajoute aussi l'arc dans l'autre sens
+    {
+        // Et on suit le même processus que le noeud initial
         Edge **secondArray;
         if (finalNode->nbNeighbor == 0)
         {
@@ -207,8 +209,10 @@ Graph *readGraphFromFile(const char *filename, int directed)
         fprintf(stderr, "Fichier non trouve. Les algorithmes pre-telecharges sont dans src/graph/.\n");
         exit(-1);
     }
+
     Graph *graph = NULL;
     char buffer[256];
+
     while (fgets(buffer, sizeof(buffer), file) != NULL)
     {
         if (buffer[0] == 'c')
@@ -218,7 +222,7 @@ Graph *readGraphFromFile(const char *filename, int directed)
         if (buffer[0] == 'p')
         {
             sscanf(buffer, "p edge %d %d", &numNodes, &numEdges);
-            graph = createGraph(numNodes, directed);
+            graph = createGraph(numNodes, directed); // On initialise le graphe
         }
         if (buffer[0] == 'e')
         {
@@ -228,7 +232,7 @@ Graph *readGraphFromFile(const char *filename, int directed)
                 int nb_args = sscanf(buffer, "e %d %d %d", &vertex1, &vertex2, &couleur);
                 if (nb_args == 2)
                 {
-                    addNeighbor(graph, vertex1, vertex2, 0); // Pas de couleurs, alors on ajoute aucune couleur au graphe
+                    addNeighbor(graph, vertex1, vertex2, 0); // Pas de couleurs, alors on ajoute aucune couleur au graphe (0 = aucune couleur)
                 }
                 else if (nb_args == 3)
                 {
@@ -254,18 +258,22 @@ void saveGraph(char *filename, Graph *graph)
     for (int node = 0; node < graph->numNodes; node++)
     {
         Node *currNode = graph->nodes[node];
+
+        // On itère dans tous les arcs du noeud
         for (int vertex = 0; vertex < currNode->nbNeighbor; vertex++)
         {
             Edge *currEdge = (Edge *)currNode->otherNodes[vertex];
+
+            // Si ce n'est pas un arc dupliqué car le graphe est non-orienté
             if (currEdge->duplicated == 0)
-            { // Si ce n'est pas un arc dupliqué car le graphe est non-orienté
-                fprintf(file, "e %d %d", currNode->id, currEdge->otherNode->id);
+            {
+                fprintf(file, "e %d %d", currNode->id, currEdge->otherNode->id); // On ajoute l'arc
 
                 if (currNode->currentColor != 0)
                 {
-                    fprintf(file, " %d", currNode->currentColor);
+                    fprintf(file, " %d", currNode->currentColor); // Si le graphe est coloré alors on l'ajoute
                 }
-                fprintf(file, "\n");
+                fprintf(file, "\n"); // On finit la ligne
             }
         }
     }
@@ -377,10 +385,10 @@ void displayNode(int nodeId, Edge **verticiesArray, int arraySize)
     }
 }
 
-void graphToString(Graph *graph, int displayVertices)
+void graphToString(Graph *graph, int displayEdges)
 {
     printf("Graphe avec %d noeuds et %d arcs.\n", graph->numNodes, graph->numArcs);
-    if (displayVertices)
+    if (displayEdges)
     {
         for (int i = 0; i < graph->numNodes; i++)
         {

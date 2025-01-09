@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "graphes.h"
 #include "welshPowell.h"
 
 

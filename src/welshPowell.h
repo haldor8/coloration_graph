@@ -2,6 +2,10 @@
 #define WELSHPOWELL_H
 
 #include "graphes.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
 /**
  * @brief Compare le degré (nombre de voisins) de deux nœuds pour le tri
  * 
