@@ -15,7 +15,7 @@ Ce projet offre une interface interactive permettant de manipuler des graphes, d
 7. [Format des fichiers de graphes](#-format-des-fichiers-de-graphes)
 8. [Aperçu des algorithmes](#-aperçu-des-algorithmes)
 
-## ** Présentation du projet**
+## **Présentation du projet**
 
 Ce projet implémente deux algorithmes de coloration de graphes :
 
@@ -56,7 +56,6 @@ L’objectif est de permettre une analyse simple et efficace des performances de
 - Dossiers `graph/` (pour les fichiers d'entrée) et `save/` (pour les fichiers de sortie) créés manuellement.
 - **Graphviz** pour la visualisation des graphes en `.json`
 
-````markdown
 ## **Installation**
 
 1. Clonez le dépôt :
@@ -64,7 +63,6 @@ L’objectif est de permettre une analyse simple et efficace des performances de
    git clone https://github.com/haldor8/coloration_graph.git
    cd graph-coloring-app
    ```
-````
 
 2. Compilez le programme :
 
