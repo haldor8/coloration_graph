@@ -10,7 +10,6 @@
 #include "graphes.h"
 #include "DSATUR.h"
 #include "welshPowell.h"
-#include "hillClimbing.h"
 
 // Librairies diverses
 #include "time.h"
